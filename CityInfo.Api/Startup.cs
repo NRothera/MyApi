@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+
 
 namespace CityInfo.Api
 {
@@ -19,11 +21,19 @@ namespace CityInfo.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc()
-                .AddMvcOptions(o =>
+                .AddJsonOptions(options =>
                 {
-                    o.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
-                    o.EnableEndpointRouting = false;
-                });
+                    //options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                })
+                .AddMvcOptions(options =>
+                {
+                options.EnableEndpointRouting = false;
+                options.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+
+
+                })
+                .AddNewtonsoftJson();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,7 +51,6 @@ namespace CityInfo.Api
             app.UseStatusCodePages();
 
             app.UseMvc();
-
         }
     }
 }
